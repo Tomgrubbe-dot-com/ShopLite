@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    android:background="?attr/colorListItem">
+
+
+    <CheckBox
+        android:id="@+id/itemCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="?attr/colorCheckBox"
+        android:backgroundTint="?attr/colorListItem"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        style="@style/WhiteCheck"
+        android:layout_weight="0"/>
+
+    <TextView
+        android:id="@+id/itemText"
+        android:layout_width="0dp"
+        android:layout_height="26dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/description"
+        android:textColor="?attr/colorListItemText"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/itemMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:layout_weight="0"
+        android:tint="@color/colorTextLight"
+        android:src="@drawable/ic_create"
+        android:contentDescription="@string/menu_button"/>
+
+</LinearLayout>

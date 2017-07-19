@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorListItem" format="reference|color" />
+    <attr name="colorListItemText" format="reference|color" />
+    <attr name="colorListItemSelected" format="reference|color" />
+    <attr name="colorCheckBox" format="reference|color" />
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/prefs_remove_all"
+            android:summary="@string/prompt_remove_all_detail"
+            android:title="@string/prompt_remove_all_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/prefs_delete_product"
+            android:summary="@string/prompt_delete_product_summary"
+            android:title="@string/prompt_delete_product_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/prefs_delete_category"
+            android:summary="@string/prompt_delete_category_summary"
+            android:title="@string/prompt_delete_category_title" />
+    </PreferenceCategory>
+</PreferenceScreen>

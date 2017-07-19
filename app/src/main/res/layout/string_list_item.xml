@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:layout_margin="4dp"
+    android:elevation="2dp"
+    android:background="?attr/colorListItem">
+
+    <TextView
+        android:id="@+id/textListItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorListItemText"
+        android:layout_weight="1" />
+
+    <!--<Button-->
+        <!--android:id="@+id/btnEdit"-->
+        <!--android:layout_width="24dp"-->
+        <!--android:layout_height="24dp"-->
+        <!--android:background="@drawable/ic_create"-->
+        <!--android:backgroundTint="@color/colorAccent"-->
+        <!--android:layout_weight="0"/>-->
+
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_delete"
+        android:backgroundTint="@color/colorAccent"
+        android:layout_weight="0"/>
+</LinearLayout>

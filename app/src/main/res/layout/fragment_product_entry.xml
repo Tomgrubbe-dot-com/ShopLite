@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="4dp"
+    tools:context=".ProductEntryFragment">
+
+    <AutoCompleteTextView
+        android:id="@+id/productText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/product_name"
+        android:textColorHint="@color/colorTextHint"
+        android:textSize="14sp"
+        android:maxLines="1"
+        android:layout_weight="1"
+        android:inputType="textCapWords"
+        android:imeOptions="actionDone" />
+
+    <Button
+        android:id="@+id/productAddFromList"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:text=""
+        android:background="@drawable/ic_list"
+        android:backgroundTint="@color/colorAccent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="0" />
+
+    <Button
+        android:id="@+id/productAdd"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:text=""
+        android:background="@drawable/ic_add_circle_outline"
+        android:backgroundTint="@color/colorAccent"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="0" />
+</LinearLayout>
