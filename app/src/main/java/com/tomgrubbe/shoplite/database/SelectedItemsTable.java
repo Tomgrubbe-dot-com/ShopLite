@@ -17,18 +17,23 @@ public class SelectedItemsTable extends TableBase {
     public static final String COLUMN_ID = "SelectedItemId";
     public static final String COLUMN_PRODUCT_ID = "ProductId";
     public static final String COLUMN_IS_CHECKED = "IsChecked";
+    public static final String COLUMN_QUANTITY = "Quantity";
 
     public static final String[] ALL_COLUMNS =
-            {COLUMN_ID, COLUMN_PRODUCT_ID, COLUMN_IS_CHECKED};
+            {COLUMN_ID, COLUMN_PRODUCT_ID, COLUMN_IS_CHECKED, COLUMN_QUANTITY };
 
     public static final String SQL_CREATE =
             "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" +
                     COLUMN_ID + " TEXT PRIMARY KEY," +
                     COLUMN_PRODUCT_ID + " TEXT," +
-                    COLUMN_IS_CHECKED + " TEXT" + ");";
+                    COLUMN_IS_CHECKED + " TEXT" +
+                    COLUMN_QUANTITY + " TEXT" + ");";
 
     public static final String SQL_DELETE =
             "DROP TABLE " + TABLE_NAME;
+
+    public static final String SQL_UPGRADE_TO_V2 =
+            "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + COLUMN_QUANTITY;
 
     public SelectedItemsTable(Context context) {
         super(context);
@@ -58,6 +63,7 @@ public class SelectedItemsTable extends TableBase {
         values.put(COLUMN_ID, selectedItem.getSelectedItemId());
         values.put(COLUMN_PRODUCT_ID, selectedItem.getProductId());
         values.put(COLUMN_IS_CHECKED, checked);
+        values.put(COLUMN_QUANTITY, selectedItem.getQuantity());
         openDB().update(TABLE_NAME, values, COLUMN_ID + "= ?", new String[] { selectedItem.getSelectedItemId() });
     }
 
@@ -68,9 +74,10 @@ public class SelectedItemsTable extends TableBase {
             String itemId      = cursor.getString(cursor.getColumnIndex(COLUMN_ID));
             String productId   = cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_ID));
             boolean isChecked  = (cursor.getInt(cursor.getColumnIndex(COLUMN_IS_CHECKED)) != 0);
+            int quantity       = cursor.getInt(cursor.getColumnIndex(COLUMN_QUANTITY));
 
             cursor.close();
-            return new SelectedItem(itemId, productId, isChecked);
+            return new SelectedItem(itemId, productId, isChecked, quantity);
         }
         cursor.close();
         return null;
@@ -83,10 +90,11 @@ public class SelectedItemsTable extends TableBase {
 
         while (cursor.moveToNext()) {
             String selectedItemId   = cursor.getString(cursor.getColumnIndex(COLUMN_ID));
-            String productId = cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_ID));
-            boolean isChecked = (cursor.getInt(cursor.getColumnIndex(COLUMN_IS_CHECKED)) != 0);
+            String productId        = cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_ID));
+            boolean isChecked       = (cursor.getInt(cursor.getColumnIndex(COLUMN_IS_CHECKED)) != 0);
+            int quantity            = cursor.getInt(cursor.getColumnIndex(COLUMN_QUANTITY));
 
-            SelectedItem selectedItem = new SelectedItem(selectedItemId, productId, isChecked);
+            SelectedItem selectedItem = new SelectedItem(selectedItemId, productId, isChecked, quantity);
             items.add(selectedItem);
         }
         cursor.close();

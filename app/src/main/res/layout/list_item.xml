@@ -14,18 +14,18 @@
 
     <CheckBox
         android:id="@+id/itemCheck"
+        style="@style/WhiteCheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:buttonTint="?attr/colorCheckBox"
-        android:backgroundTint="?attr/colorListItem"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        style="@style/WhiteCheck"
-        android:layout_weight="0"/>
+        android:layout_weight="0"
+        android:backgroundTint="?attr/colorListItem"
+        android:buttonTint="?attr/colorCheckBox" />
 
     <TextView
         android:id="@+id/itemText"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="26dp"
         android:layout_weight="1"
         android:ellipsize="end"
@@ -34,13 +34,65 @@
         android:textColor="?attr/colorListItemText"
         android:textSize="14sp" />
 
-    <ImageView
-        android:id="@+id/itemMenu"
+
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="26dp"
-        android:layout_weight="0"
-        android:tint="@color/colorTextLight"
-        android:src="@drawable/ic_create"
-        android:contentDescription="@string/menu_button"/>
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/quantityLess"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_nav_back"
+            android:layout_weight="1"
+            android:paddingLeft="15dp"
+            android:layout_marginLeft="15dp"
+            android:paddingRight="10dp"
+            android:backgroundTint="@color/colorTextLight" />
+
+        <TextView
+            android:id="@+id/textQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:layout_weight="0.5"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/quantityMore"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_nav_next"
+            android:layout_weight="1"
+            android:paddingRight="15dp"
+            android:layout_marginRight="5dp"
+            android:paddingLeft="10dp"
+            android:backgroundTint="@color/colorTextLight" />
+
+    </LinearLayout>
+
+
+    <!--<Spinner-->
+        <!--android:id="@+id/textQuantity"-->
+        <!--style="@style/Widget.AppCompat.Spinner.Underlined"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="0"-->
+        <!--android:backgroundTint="@color/colorTextLight"-->
+        <!--android:entries="@array/quantities"-->
+        <!--android:text=""-->
+        <!--android:textColor="@color/colorTextLight"-->
+        <!--android:textSize="10sp" />-->
+
+    <!--<ImageView-->
+        <!--android:id="@+id/itemMenu"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="26dp"-->
+        <!--android:layout_weight="0"-->
+        <!--android:tint="@color/colorTextLight"-->
+        <!--android:src="@drawable/ic_create"-->
+        <!--android:contentDescription="@string/menu_button"/>-->
 
 </LinearLayout>

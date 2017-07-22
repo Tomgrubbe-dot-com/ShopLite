@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.tomgrubbe.shoplite.MainActivity;
 import com.tomgrubbe.shoplite.database.ProductsTable;
@@ -15,16 +16,19 @@ public class SelectedItem implements Parcelable {
     private String selectedItemId;
     private String productId;
     private boolean isChecked = false;
+    private int quantity = 1;
+    public static final int MAX_QUANTITY = 10;
 
 
     public SelectedItem(String itemId, String productId) {
-        this(itemId, productId, false);
+        this(itemId, productId, false, 1);
     }
 
-    public SelectedItem(String itemId, String productId, boolean isChecked) {
+    public SelectedItem(String itemId, String productId, boolean isChecked, int quantity) {
         this.selectedItemId = (itemId == null) ? UUID.randomUUID().toString() : itemId;
         this.productId = productId;
         this.isChecked = isChecked;
+        this.quantity = quantity;
     }
 
 
@@ -32,6 +36,7 @@ public class SelectedItem implements Parcelable {
         this.selectedItemId = in.readString();
         this.productId = in.readString();
         this.isChecked = (in.readInt() != 0);
+        this.quantity = in.readInt();
     }
 
     public boolean isChecked() {
@@ -58,6 +63,10 @@ public class SelectedItem implements Parcelable {
         this.productId = productId;
     }
 
+    public int getQuantity() { return this.quantity; }
+
+    public void setQuantity(int value) { this.quantity = value; }
+
     public String getSelectedItemName (Context context)  {
         String productName = null;
         if (context != null) {
@@ -76,6 +85,7 @@ public class SelectedItem implements Parcelable {
         values.put(SelectedItemsTable.COLUMN_ID, selectedItemId);
         values.put(SelectedItemsTable.COLUMN_PRODUCT_ID, productId);
         values.put(SelectedItemsTable.COLUMN_IS_CHECKED, isChecked);
+        values.put(SelectedItemsTable.COLUMN_QUANTITY, quantity);
 
         return values;
     }
@@ -90,6 +100,7 @@ public class SelectedItem implements Parcelable {
         dest.writeString(this.selectedItemId);
         dest.writeString(this.productId);
         dest.writeInt((this.isChecked) ? 1 : 0);
+        dest.writeInt(this.quantity);
     }
 
     public static final Parcelable.Creator<SelectedItem> CREATOR = new Parcelable.Creator<SelectedItem>() {
@@ -103,4 +114,5 @@ public class SelectedItem implements Parcelable {
             return new SelectedItem[size];
         }
     };
+
 }
