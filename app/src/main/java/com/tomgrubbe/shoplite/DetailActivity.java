@@ -22,8 +22,10 @@ import android.widget.Toast;
 
 import com.tomgrubbe.shoplite.database.CategoriesTable;
 import com.tomgrubbe.shoplite.database.ProductsTable;
+import com.tomgrubbe.shoplite.database.SelectedItemsTable;
 import com.tomgrubbe.shoplite.model.Category;
 import com.tomgrubbe.shoplite.model.Product;
+import com.tomgrubbe.shoplite.model.SelectedItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +35,12 @@ public class DetailActivity extends AppCompatActivity {
     private TextView textName;
     private Spinner spinCategories;
     private Button btnAddCategory;
+    private Spinner spinQuantities;
     private List<String> mCategoriesList = new ArrayList<>();
     private Product mProduct;
     private final Context mContext = this;
+    private List<Integer> mQuantitiesList = new ArrayList<>();
+    private int quantity = 1;
 
 
     @Override
@@ -51,6 +56,7 @@ public class DetailActivity extends AppCompatActivity {
         textName = (TextView) findViewById(R.id.textName);
         spinCategories = (Spinner) findViewById(R.id.textCategory);
         btnAddCategory = (Button) findViewById(R.id.buttonCreateCategory);
+        spinQuantities = (Spinner) findViewById(R.id.spinQuantity);
 
         mProduct = getIntent().getExtras().getParcelable(ProductAdapter.ITEM_KEY);
         if (mProduct == null) {
@@ -66,10 +72,18 @@ public class DetailActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, mCategoriesList);
 
-        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_style);
         spinCategories.setAdapter(adapter);
         selectCategory(category.getCategoryName());
+
+        mQuantitiesList =  getQuantitiesList();
+        ArrayAdapter<Integer> adapter2 = new ArrayAdapter<Integer>(
+                this, android.R.layout.simple_spinner_item, mQuantitiesList);
+
+        spinQuantities.setAdapter(adapter2);
+        SelectedItemsTable sit = new SelectedItemsTable(this);
+        SelectedItem item = sit.fromProductId(mProduct.getProductId());
+        spinQuantities.setSelection(item.getQuantity() - 1);
     }
 
     @Override
@@ -147,6 +161,12 @@ public class DetailActivity extends AppCompatActivity {
             mProduct.setName(name);
 
             pt.updateProduct(mProduct);
+
+            SelectedItemsTable sit = new SelectedItemsTable(this);
+            SelectedItem item = sit.fromProductId(mProduct.getProductId());
+            int quantity = spinQuantities.getSelectedItemPosition() + 1;
+            item.setQuantity(quantity);
+            sit.updateSelectedItem(item);
             setResult(MainActivity.PRODUCT_UPDATE, getIntent().putExtra(MainActivity.PRODUCT_UPDATE_DATA, mProduct));
             DetailActivity.this.finish();
         }
@@ -188,6 +208,13 @@ public class DetailActivity extends AppCompatActivity {
             categoriesStringList.add(cat.getCategoryName());
         }
         return categoriesStringList;
+    }
+    private List<Integer> getQuantitiesList() {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<=SelectedItem.MAX_QUANTITY; i++) {
+            list.add(i);
+        }
+        return list;
     }
 
     private void selectCategory(String category) {

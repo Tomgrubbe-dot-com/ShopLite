@@ -7,18 +7,24 @@ import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tomgrubbe.shoplite.database.ProductsTable;
 import com.tomgrubbe.shoplite.database.SelectedItemsTable;
 import com.tomgrubbe.shoplite.model.Product;
 import com.tomgrubbe.shoplite.model.SelectedItem;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
@@ -48,6 +54,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         final ProductsTable pt = new ProductsTable(mContext);
         final SelectedItemsTable selectedItemsTable = new SelectedItemsTable(mContext);
         final Product prod = pt.getProductFromId(selectedItem.getProductId());
+        final ViewHolder viewHolder = holder;
         final int pos = position;
 
         String itemName = selectedItem.getSelectedItemName(mContext);
@@ -55,7 +62,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
         //highlightItem(holder, position);
 
-        holder.view.setOnClickListener(new View.OnClickListener() {
+        holder.itemText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedPos = pos;
@@ -73,15 +80,43 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                 selectedItem.setChecked(isChecked);
                 selectedItemsTable.updateSelectedItem(selectedItem);
                 mItems.get(pos).setChecked(isChecked);
+            }
+        });
 
-                //Toast.makeText(mContext, prod.getName() + ((isChecked) ? " checked" : " unchecked"), Toast.LENGTH_SHORT).show();
+        holder.btnLess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int q = selectedItem.getQuantity();
+                q = (q <= 1) ? 1 : q - 1;
+                updateQuantity(selectedItem, selectedItemsTable, viewHolder, q);
+            }
+        });
+
+        holder.btnMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int q = selectedItem.getQuantity();
+                q = (q >= SelectedItem.MAX_QUANTITY) ? SelectedItem.MAX_QUANTITY : q + 1;
+                updateQuantity(selectedItem, selectedItemsTable, viewHolder, q);
             }
         });
 
         holder.itemCheck.setChecked(selectedItem.isChecked());
+        holder.textQuantity.setText(Integer.toString(selectedItem.getQuantity()));
 
+        // TODO: FIX THIS
+        //sort();
     }
 
+
+
+    private void updateQuantity(SelectedItem item, SelectedItemsTable table, ViewHolder holder, int quantity)   {
+        item.setQuantity(quantity);
+        table.updateSelectedItem(item);
+        holder.textQuantity.setText(Integer.toString(quantity));
+        holder.view.playSoundEffect(SoundEffectConstants.CLICK);
+        //Toast.makeText(mContext, "Quantity changed: " + Integer.toString(quantity), Toast.LENGTH_SHORT).show();
+    }
 
 
     void highlightItem(ViewHolder holder, int position)   {
@@ -106,7 +141,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
         public final CheckBox itemCheck;
         public final TextView itemText;
-        public final ImageView itemMenu;
+//        public final ImageView btnLess;
+//        public final ImageView btnMore;
+        public final Button btnLess;
+        public final Button btnMore;
+        public final TextView textQuantity;
         public final View view;
 
         public ViewHolder(View itemView) {
@@ -114,7 +153,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
             itemCheck = (CheckBox) itemView.findViewById(R.id.itemCheck);
             itemText  = (TextView) itemView.findViewById(R.id.itemText);
-            itemMenu  = (ImageView) itemView.findViewById(R.id.itemMenu);
+            btnLess  = (Button) itemView.findViewById(R.id.quantityLess);
+            btnMore  = (Button) itemView.findViewById(R.id.quantityMore);
+            textQuantity  = (TextView) itemView.findViewById(R.id.textQuantity);
             view      = itemView;
 
             itemView.setClickable(true);

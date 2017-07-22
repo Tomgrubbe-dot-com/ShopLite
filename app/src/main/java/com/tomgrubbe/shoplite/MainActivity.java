@@ -31,6 +31,8 @@ import com.tomgrubbe.shoplite.model.Product;
 import com.tomgrubbe.shoplite.model.SelectedItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -96,6 +98,8 @@ public class MainActivity extends AppCompatActivity
 
         // Set default settings values
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+
+        updateList();
     }
 
     @Override
@@ -195,7 +199,7 @@ public class MainActivity extends AppCompatActivity
         selectedItemsTable.deleteAll();
         this.deleteDatabase(TableBase.DB_FILE_NAME);
         getSelectedItems();
-        mAdapter.notifyDataSetChanged();
+        updateList();
     }
 
     private void getSelectedItems() {
@@ -220,7 +224,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         getSelectedItems();
-        mAdapter.notifyDataSetChanged();
+        updateList();
 
         String msg = "Removed " + Long.toString(count) + " items.";
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
@@ -239,7 +243,7 @@ public class MainActivity extends AppCompatActivity
             selectedItemsTable.updateSelectedItem(item);
         }
         getSelectedItems();
-        mAdapter.notifyDataSetChanged();
+        updateList();
     }
 
     private boolean areAllChecked()    {
@@ -345,7 +349,7 @@ public class MainActivity extends AppCompatActivity
             SelectedItem item = new SelectedItem(null, product.getProductId());
             selectedItemsTable.addItem(item);
             mDataItems.add(item);
-            mAdapter.notifyDataSetChanged();
+            updateList();
         }
     }
 
@@ -376,7 +380,7 @@ public class MainActivity extends AppCompatActivity
             case MainActivity.PRODUCT_UPDATE: {
                 Product product = data.getExtras().getParcelable(MainActivity.PRODUCT_UPDATE_DATA);
                 getSelectedItems();
-                mAdapter.notifyDataSetChanged();
+                updateList();
                 break;
             }
             case MainActivity.PRODUCT_DELETE: {
@@ -385,12 +389,35 @@ public class MainActivity extends AppCompatActivity
                     selectedItemsTable.deleteItem(selectedItemsTable.fromProductId(product.getProductId()));
                     productTable.deleteProduct(product);
                     getSelectedItems();
-                    mAdapter.notifyDataSetChanged();
+                    updateList();
 
                 }
                 break;
             }
         }
+    }
+
+    private void updateList()   {
+        sort();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void sort() {
+        Collections.sort(this.mDataItems, new Comparator<SelectedItem>()   {
+            public int compare(SelectedItem lhs, SelectedItem rhs)  {
+
+                if (lhs == null || rhs == null)
+                    throw new IllegalArgumentException("Null SelectedItem argument.");
+
+                String n1 = lhs.getSelectedItemName(MainActivity.this);
+                String n2 = rhs.getSelectedItemName(MainActivity.this);
+
+                if (n1 == null || n2 == null)
+                    throw new IllegalArgumentException("Null SelectedItem argument.");
+
+                return (n1.compareTo(n2));
+            }
+        });
     }
 
     private void initSwipe() {

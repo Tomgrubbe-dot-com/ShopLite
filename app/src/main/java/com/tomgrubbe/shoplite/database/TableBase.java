@@ -11,7 +11,7 @@ import com.tomgrubbe.shoplite.R;
 public abstract class TableBase {
     public static final String TAG = "TableBase";
     public static final String DB_FILE_NAME = "shoplite.db";
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 2;
 
     protected Context mContext;
     protected static DBHelper mDBHelper;
@@ -49,10 +49,14 @@ public abstract class TableBase {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL(CategoriesTable.SQL_DELETE);
-            db.execSQL(ProductsTable.SQL_DELETE);
-            db.execSQL(SelectedItemsTable.SQL_DELETE);
-            onCreate(db);
+            if (oldVersion == 1 && newVersion == 2) {
+                db.execSQL(SelectedItemsTable.SQL_UPGRADE_TO_V2);
+            } else  {
+                db.execSQL(CategoriesTable.SQL_DELETE);
+                db.execSQL(ProductsTable.SQL_DELETE);
+                db.execSQL(SelectedItemsTable.SQL_DELETE);
+                onCreate(db);
+            }
         }
 
 

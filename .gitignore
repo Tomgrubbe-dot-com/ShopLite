@@ -1,6 +1,7 @@
 # built application files
 *.apk
 *.ap_
+*.jks
 
 # files for the dex VM
 *.dex
@@ -15,6 +16,7 @@
 # generated files
 bin/
 gen/
+.idea/
 
 # Ignore gradle files
 .gradle/

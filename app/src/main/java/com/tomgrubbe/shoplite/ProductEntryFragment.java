@@ -105,6 +105,13 @@ public class ProductEntryFragment extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     // Done pressed
+
+                    String productName = productText.getText().toString();
+                    if (!productName.isEmpty()) {
+                        if (!isAlreadySelected(productName)) {
+                            selectProduct(productName);
+                        }
+                    }
                     hideKeyboard();
                     return true;
                 }
@@ -211,6 +218,7 @@ public class ProductEntryFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     public interface ProductEntryListener {
 
