@@ -41,7 +41,7 @@ public class DatabaseSeeder {
         products.addProduct(new Product(null, "Apricots", categories.findId("Produce")));
         products.addProduct(new Product(null, "Asparagus", categories.findId("Produce")));
         products.addProduct(new Product(null, "Bananas", categories.findId("Produce")));
-        products.addProduct(new Product(null, "Brocoli", categories.findId("Produce")));
+        products.addProduct(new Product(null, "Broccoli", categories.findId("Produce")));
         products.addProduct(new Product(null, "Carrots", categories.findId("Produce")));
         products.addProduct(new Product(null, "Cauliflower", categories.findId("Produce")));
         products.addProduct(new Product(null, "Celery", categories.findId("Produce")));
@@ -56,7 +56,10 @@ public class DatabaseSeeder {
         products.addProduct(new Product(null, "Peaches", categories.findId("Produce")));
         products.addProduct(new Product(null, "Peppers, Bell", categories.findId("Produce")));
         products.addProduct(new Product(null, "Peppers, Jalapeno", categories.findId("Produce")));
-        products.addProduct(new Product(null, "Potatoes", categories.findId("Produce")));
+        products.addProduct(new Product(null, "Potatoes, Baby", categories.findId("Produce")));
+        products.addProduct(new Product(null, "Potatoes, Mashed", categories.findId("Produce")));
+        products.addProduct(new Product(null, "Potatoes, Red", categories.findId("Produce")));
+        products.addProduct(new Product(null, "Potatoes, Russet", categories.findId("Produce")));
         products.addProduct(new Product(null, "Strawberries", categories.findId("Produce")));
         products.addProduct(new Product(null, "Tomatoes", categories.findId("Produce")));
         products.addProduct(new Product(null, "Watermelon", categories.findId("Produce")));
