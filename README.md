@@ -5,7 +5,7 @@ A Simple Android Shopping App
 Features:
 
 * Uses SQlite database
-* Supports Android versions Jellybean (16) and later
+* Supports Android versions Jellybean (4.1.x, sdk 16) and later
 * Predefined product and category tables
 * Users can add their own product categories
 * Users can add their own products
