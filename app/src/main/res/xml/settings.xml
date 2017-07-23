@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory android:title="Sort Order">
+        <ListPreference
+            android:key="prefs_sort_alphabetically"
+            android:summary="Main list sort preference"
+            android:title="List Sort Order"
+            android:entries="@array/sortOrders"
+            android:entryValues="@array/sortOrderValues"/>
+    </PreferenceCategory>
+
     <PreferenceCategory>
         <SwitchPreference
             android:defaultValue="false"

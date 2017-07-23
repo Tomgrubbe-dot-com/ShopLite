@@ -213,6 +213,16 @@ public class MainActivity extends AppCompatActivity
         return prefs.getBoolean(getString(R.string.prefs_remove_all), false);
     }
 
+    private boolean sortByAlpha()   {
+        SharedPreferences prefs =
+                PreferenceManager.getDefaultSharedPreferences(this);
+
+        String value = prefs.getString("prefs_sort_alphabetically", "BY_ADDED");
+
+        return (value.equals("BY_ALPHA"));
+    }
+
+
     private void removeChecked() {
         long count = 0;
 
@@ -398,7 +408,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateList()   {
-        sort();
+
+        if (sortByAlpha()) {
+            sort();
+        }
         mAdapter.notifyDataSetChanged();
     }
 
