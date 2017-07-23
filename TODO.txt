@@ -5,6 +5,7 @@ TODO:
 [ ] Add multiple sort options like "by category"
 [ ] Add other themes
 [ ] Add recently used table
+[ ] Automatically update master list when DatabaseSeeder list is updated
 
 
 
