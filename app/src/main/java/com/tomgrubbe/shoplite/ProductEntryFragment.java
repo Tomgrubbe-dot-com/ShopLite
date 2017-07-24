@@ -1,8 +1,12 @@
 package com.tomgrubbe.shoplite;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -15,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,9 +27,12 @@ import com.tomgrubbe.shoplite.database.ProductsTable;
 import com.tomgrubbe.shoplite.database.SelectedItemsTable;
 import com.tomgrubbe.shoplite.model.Product;
 import com.tomgrubbe.shoplite.model.SelectedItem;
+import com.tomgrubbe.shoplite.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 //import android.app.Fragment;
 
@@ -35,9 +43,11 @@ public class ProductEntryFragment extends Fragment {
 
     private ProductEntryListener mListener;
     private List<String> allProducts = new ArrayList<>();
+    private static final int REQUEST_CODE_VOICE_ADD = 2222;
 
     private AutoCompleteTextView productText;
     private Button productAddFromList;
+    private Button productAddFromVoice;
     private Button productAdd;
 
     public ProductEntryFragment() {
@@ -70,6 +80,7 @@ public class ProductEntryFragment extends Fragment {
 
         productText = (AutoCompleteTextView) getView().findViewById(R.id.productText);
         productAddFromList = (Button) getView().findViewById(R.id.productAddFromList);
+        productAddFromVoice = (Button) getView().findViewById(R.id.productAddFromVoice);
         productAdd = (Button) getView().findViewById(R.id.productAdd);
 
         getAllProducts();
@@ -139,6 +150,16 @@ public class ProductEntryFragment extends Fragment {
                 Intent intent = new Intent((Context)mListener, com.tomgrubbe.shoplite.ProductListActivity.class);
                 intent.putExtra(ProductListActivity.PRODUCT_LIST_TITLE, "Select Product from List");
                 startActivityForResult(intent, ProductListActivity.PRODUCT_LIST_RESULT);
+            }
+        });
+
+        productAddFromVoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Add Product");
+                startActivityForResult(i, REQUEST_CODE_VOICE_ADD);
             }
         });
     }
@@ -217,6 +238,55 @@ public class ProductEntryFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_VOICE_ADD && resultCode == RESULT_OK) {
+            ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            selectItemFromVoiceList(results);
+            //lv.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, results));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private void selectItemFromVoiceList(List<String> list)   {
+
+        // Only one guessed word. Added it to edit box
+        if (list.size() == 1)   {
+            productText.setText(Utils.capFirstWords(list.get(0)));
+            //showKeyboard();
+            return;
+        }
+
+        // TODO: Customize this prompt
+
+        // Several words returned so let user choose from a list
+        final List<String> productList = list;
+        //final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.select_dialog_singlechoice);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
+        adapter.addAll(productList);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder.setTitle("Did you mean...");
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String item = productList.get(which);
+                //Toast.makeText(getContext(), "You selected " + item, Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+                productText.setText(Utils.capFirstWords(item));
+                //showKeyboard();
+            }
+        });
+
+        final Dialog dialog = builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogSlideLeft;
+        dialog.show();
     }
 
 
