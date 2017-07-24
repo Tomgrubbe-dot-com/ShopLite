@@ -1,7 +1,7 @@
 TODO:
 
 [ ] Add price fields for ProductsTable
-[ ] Add voice support
+[X] Add voice support
 [ ] Add multiple sort options like "by category"
 [ ] Add other themes
 [ ] Add recently used table
