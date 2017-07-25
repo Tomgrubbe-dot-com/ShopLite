@@ -1,32 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Sort Order">
+    <PreferenceCategory android:title="Sort">
         <ListPreference
             android:key="prefs_sort_alphabetically"
-            android:summary="Main list sort preference"
+            android:summary="%s"
             android:title="List Sort Order"
             android:entries="@array/sortOrders"
             android:entryValues="@array/sortOrderValues"/>
     </PreferenceCategory>
 
-    <PreferenceCategory>
+    <PreferenceCategory android:title="Confirmations">
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/prefs_remove_all"
             android:summary="@string/prompt_remove_all_detail"
             android:title="@string/prompt_remove_all_title" />
-    </PreferenceCategory>
 
-    <PreferenceCategory>
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/prefs_delete_product"
             android:summary="@string/prompt_delete_product_summary"
             android:title="@string/prompt_delete_product_title" />
-    </PreferenceCategory>
 
-    <PreferenceCategory>
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/prefs_delete_category"

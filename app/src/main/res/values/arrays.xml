@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="sortOrders">
-        <item>By product name</item>
-        <item>By order added</item>
+        <item>Product name</item>
+        <item>Order added</item>
     </string-array>
     <string-array name="sortOrderValues">
         <item>BY_ALPHA</item>
