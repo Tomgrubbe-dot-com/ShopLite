@@ -45,6 +45,7 @@ public abstract class TableBase {
             db.execSQL(CategoriesTable.SQL_CREATE);
             db.execSQL(ProductsTable.SQL_CREATE);
             db.execSQL(SelectedItemsTable.SQL_CREATE);
+            db.execSQL(RemovedItemsTable.SQL_CREATE);
         }
 
         @Override
@@ -55,6 +56,7 @@ public abstract class TableBase {
                 db.execSQL(CategoriesTable.SQL_DELETE);
                 db.execSQL(ProductsTable.SQL_DELETE);
                 db.execSQL(SelectedItemsTable.SQL_DELETE);
+                db.execSQL(RemovedItemsTable.SQL_DELETE);
                 onCreate(db);
             }
         }

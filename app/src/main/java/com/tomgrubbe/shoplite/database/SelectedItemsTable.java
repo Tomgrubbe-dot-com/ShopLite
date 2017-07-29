@@ -26,7 +26,7 @@ public class SelectedItemsTable extends TableBase {
             "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" +
                     COLUMN_ID + " TEXT PRIMARY KEY," +
                     COLUMN_PRODUCT_ID + " TEXT," +
-                    COLUMN_IS_CHECKED + " TEXT" +
+                    COLUMN_IS_CHECKED + " TEXT," +
                     COLUMN_QUANTITY + " TEXT" + ");";
 
     public static final String SQL_DELETE =
