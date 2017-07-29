@@ -20,4 +20,5 @@
     <string name="prompt_delete_category_title">Deleting categories</string>
     <string name="prompt_delete_category_summary">Ask when permanently deleting categories from the master list</string>
     <string name="prefs_delete_category">prefs_delete_category</string>
+    <string name="recent_items">Recent Items</string>
 </resources>

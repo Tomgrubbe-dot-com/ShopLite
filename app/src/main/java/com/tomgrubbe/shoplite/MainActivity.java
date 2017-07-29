@@ -24,11 +24,15 @@ import android.widget.Toast;
 import com.tomgrubbe.shoplite.database.CategoriesTable;
 import com.tomgrubbe.shoplite.database.DatabaseSeeder;
 import com.tomgrubbe.shoplite.database.ProductsTable;
+import com.tomgrubbe.shoplite.database.RemovedItemsTable;
 import com.tomgrubbe.shoplite.database.SelectedItemsTable;
 import com.tomgrubbe.shoplite.database.TableBase;
 import com.tomgrubbe.shoplite.model.Category;
 import com.tomgrubbe.shoplite.model.Product;
+import com.tomgrubbe.shoplite.model.RemovedItem;
 import com.tomgrubbe.shoplite.model.SelectedItem;
+import com.tomgrubbe.shoplite.utils.Common;
+import com.tomgrubbe.shoplite.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +41,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements ProductEntryFragment.ProductEntryListener,
-        CheckManagementFragment.CheckManagerListener {
+        CheckManagementFragment.CheckManagerListener,
+        RemovedItemsActivity.RemovedItemListener    {
 
     private final static java.lang.String DATA_ITEMS = "DataItems";
     public final static String PRODUCT_ADD_DATA = "PRODUCT_ADD_DATA";
@@ -46,6 +51,9 @@ public class MainActivity extends AppCompatActivity
     public final static int PRODUCT_UPDATE = 3;
     public final static String PRODUCT_DELETE_DATA = "PRODUCT_DELETE_DATA";
     public final static int PRODUCT_DELETE = 4;
+    public final static String SELECTED_ITEM_DELETE_DATA = "SELECTED_ITEM_DELETE_DATA";
+    public final static int SELECTED_ITEM_DELETE = 5;
+
     public static final String GLOBAL_PREFS_KEY = "shoplite_global_prefs";
     private List<SelectedItem> mDataItems = new ArrayList<>(); //generateFakeData();
     private RecyclerView recyclerView;
@@ -56,11 +64,15 @@ public class MainActivity extends AppCompatActivity
     private ProductsTable productTable;
     private CategoriesTable categoriesTable;
     private SelectedItemsTable selectedItemsTable;
+    private RemovedItemsTable removedItemsTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // So other activities can get to this context
+        Common.Instance().setBaseActivity(MainActivity.this);
 
         // DEBUG
         //this.deleteDatabase(TableBase.DB_FILE_NAME);
@@ -74,6 +86,7 @@ public class MainActivity extends AppCompatActivity
         productTable = new ProductsTable(this);
         categoriesTable = new CategoriesTable(this);
         selectedItemsTable = new SelectedItemsTable(this);
+        removedItemsTable = new RemovedItemsTable(this);
 
         // Load list of selected items (if any)
         if (productTable.getProductCount() == 0) {
@@ -129,6 +142,8 @@ public class MainActivity extends AppCompatActivity
 
     public SelectedItemsTable getSelectedItemsTable() { return selectedItemsTable; }
 
+    public RemovedItemsTable getRemovedItemsTable() { return removedItemsTable; }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -143,6 +158,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.editCategories:
                 showCategoryList();
+                break;
+            case R.id.menuShowRemoved:
+                showRemovedItems();
                 break;
             case R.id.menuSettings:
                 showSettings();
@@ -172,7 +190,13 @@ public class MainActivity extends AppCompatActivity
 
     private void showCategoryList()   {
         Intent intent = new Intent(this, com.tomgrubbe.shoplite.CategoryListActivity.class);
+        intent.putExtra("caller", "MainActivity");
         startActivityForResult(intent, CategoryListActivity.CATEGORY_LIST_RESULT);
+    }
+
+    private void showRemovedItems() {
+        Intent intent = new Intent(this, com.tomgrubbe.shoplite.RemovedItemsActivity.class);
+        startActivityForResult(intent, RemovedItemsActivity.REMOVED_ITEMS_LIST_RESULT);
     }
 
     private void showSettings() {
@@ -189,6 +213,7 @@ public class MainActivity extends AppCompatActivity
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         deleteDatabase();
+                        DatabaseSeeder.SeedInitialDatabase(productTable, categoriesTable);
                         Toast.makeText(MainActivity.this, "Database reset", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -197,7 +222,8 @@ public class MainActivity extends AppCompatActivity
 
     private void deleteDatabase() {
         selectedItemsTable.deleteAll();
-        this.deleteDatabase(TableBase.DB_FILE_NAME);
+        selectedItemsTable.closeDB();
+        deleteDatabase(TableBase.DB_FILE_NAME);
         getSelectedItems();
         updateList();
     }
@@ -228,7 +254,8 @@ public class MainActivity extends AppCompatActivity
 
         for (SelectedItem item : selectedItemsTable.getAllSelectedItems()) {
             if (item.isChecked()) {
-                selectedItemsTable.deleteItem(item);
+                //selectedItemsTable.deleteItem(item);
+                deleteSelectedItem(item, true);
                 count++;
             }
         }
@@ -396,7 +423,8 @@ public class MainActivity extends AppCompatActivity
             case MainActivity.PRODUCT_DELETE: {
                 Product product = data.getExtras().getParcelable(MainActivity.PRODUCT_DELETE_DATA);
                 if (product != null) {
-                    selectedItemsTable.deleteItem(selectedItemsTable.fromProductId(product.getProductId()));
+                    //selectedItemsTable.deleteItem(selectedItemsTable.fromProductId(product.getProductId()));
+                    deleteSelectedItem(selectedItemsTable.fromProductId(product.getProductId()), false);
                     productTable.deleteProduct(product);
                     getSelectedItems();
                     updateList();
@@ -404,6 +432,33 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             }
+//            case MainActivity.SELECTED_ITEM_DELETE: {
+//                SelectedItem si = data.getExtras().getParcelable(MainActivity.SELECTED_ITEM_DELETE_DATA);
+//                if (si != null) {
+//                    deleteSelectedItem(si);
+//                    getSelectedItems();
+//                    updateList();
+//                }
+//                break;
+//            }
+
+        }
+    }
+
+    // Delete item from selected items and also add it to recently removed table
+    private void deleteSelectedItem(SelectedItem item, boolean addToRecents)  {
+        RemovedItem ri = removedItemsTable.fromProductId(item.getProductId());
+
+        // Remove it from recent items if it's already there so we can add it again with a recent timestamp
+        if (ri != null) {
+            removedItemsTable.deleteItem(ri);
+        }
+
+        selectedItemsTable.deleteItem(selectedItemsTable.fromProductId(item.getProductId()));
+
+        if (addToRecents) {
+            RemovedItem removedItem = new RemovedItem(null, item.getProductId(), false, Utils.getDateStringNow());
+            removedItemsTable.addItem(removedItem);
         }
     }
 
@@ -448,7 +503,8 @@ public class MainActivity extends AppCompatActivity
                 if (direction == ItemTouchHelper.RIGHT) {
 
                     SelectedItem item = mDataItems.get(position);
-                    selectedItemsTable.deleteItem(item);
+                    //selectedItemsTable.deleteItem(item);
+                    deleteSelectedItem(item, true);
 
                     mAdapter.notifyItemRemoved(position);
                     mDataItems.remove(position);
@@ -469,4 +525,15 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    @Override
+    public void OnSelectRemovedItem(Product product) {
+        OnProductAdded(product.getName());
+    }
+
+    @Override
+    public void OnSelectRemovedItems(List<Product> products) {
+        for (Product product : products) {
+            OnProductAdded(product.getName());
+        }
+    }
 }

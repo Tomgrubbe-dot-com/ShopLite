@@ -22,9 +22,11 @@ import android.widget.Toast;
 
 import com.tomgrubbe.shoplite.database.CategoriesTable;
 import com.tomgrubbe.shoplite.database.ProductsTable;
+import com.tomgrubbe.shoplite.database.RemovedItemsTable;
 import com.tomgrubbe.shoplite.database.SelectedItemsTable;
 import com.tomgrubbe.shoplite.model.Category;
 import com.tomgrubbe.shoplite.model.Product;
+import com.tomgrubbe.shoplite.model.RemovedItem;
 import com.tomgrubbe.shoplite.model.SelectedItem;
 
 import java.util.ArrayList;
@@ -180,11 +182,35 @@ public class ProductListActivity extends AppCompatActivity implements StringList
     }
 
     private void deleteProductFromSelectedItems(Product product)    {
+//        SelectedItemsTable sit = new SelectedItemsTable(this);
+//        SelectedItem item = sit.fromProductId(product.getProductId());
+//        if (item != null)   {
+//            sit.deleteItem(item);
+//        }
         SelectedItemsTable sit = new SelectedItemsTable(this);
         SelectedItem item = sit.fromProductId(product.getProductId());
-        if (item != null)   {
-            sit.deleteItem(item);
+        if (item != null) {
+            //setResult(MainActivity.SELECTED_ITEM_DELETE, getIntent().putExtra(MainActivity.SELECTED_ITEM_DELETE_DATA, product));
+            deleteSelectedItem(item);
         }
+    }
+
+    // Delete item from selected items and also add it to recently removed table
+    private void deleteSelectedItem(SelectedItem item)  {
+        RemovedItemsTable removedItemsTable = new RemovedItemsTable(this);
+        RemovedItem ri = removedItemsTable.fromProductId(item.getProductId());
+
+        // Remove it from recent items if it's already there so we can add it again with a recent timestamp
+        if (ri != null) {
+            removedItemsTable.deleteItem(ri);
+        }
+
+        SelectedItemsTable sit = new SelectedItemsTable(this);
+        sit.deleteItem(sit.fromProductId(item.getProductId()));
+
+        // Don't add deleted item to removed items
+//        RemovedItem removedItem = new RemovedItem(null, item.getProductId(), false);
+//        removedItemsTable.addItem(removedItem);
     }
 
     @Override

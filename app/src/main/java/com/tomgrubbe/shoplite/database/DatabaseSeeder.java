@@ -89,13 +89,13 @@ public class DatabaseSeeder {
         products.addProduct(new Product(null, "Tuna", categories.findId("Canned/Jarred")));
 
 
-        products.addProduct(new Product(null, "Chicken", categories.findId("Deli")));
+        products.addProduct(new Product(null, "Chicken, Sliced", categories.findId("Deli")));
         products.addProduct(new Product(null, "Cole Slaw", categories.findId("Deli")));
-        products.addProduct(new Product(null, "Ham", categories.findId("Deli")));
+        products.addProduct(new Product(null, "Ham,Sliced", categories.findId("Deli")));
         products.addProduct(new Product(null, "Lunch Meat", categories.findId("Deli")));
         products.addProduct(new Product(null, "Potato Salad", categories.findId("Deli")));
         products.addProduct(new Product(null, "Sausage", categories.findId("Deli")));
-        products.addProduct(new Product(null, "Turkey", categories.findId("Deli")));
+        products.addProduct(new Product(null, "Turkey, Sliced", categories.findId("Deli")));
 
 
         products.addProduct(new Product(null, "Chicken", categories.findId("Meats")));
@@ -216,8 +216,7 @@ public class DatabaseSeeder {
         products.addProduct(new Product(null, "Rice", categories.findId("Packaged Foods")));
         products.addProduct(new Product(null, "Spaghetti", categories.findId("Packaged Foods")));
         products.addProduct(new Product(null, "Tortillas", categories.findId("Packaged Foods")));
-        products.addProduct(new Product(null, "Tortillas", categories.findId("Packaged Foods")));
-        products.addProduct(new Product(null, "Tortillas", categories.findId("Packaged Foods")));
+
 
 
         // TODO: Add More!

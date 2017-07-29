@@ -1,6 +1,9 @@
 package com.tomgrubbe.shoplite.utils;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Utils {
 
     private static Utils Instance = null;
@@ -23,5 +26,12 @@ public class Utils {
         }
 
         return builder.toString().trim();
+    }
+
+    public static String getDateStringNow()   {
+        // set the format to sql date time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }

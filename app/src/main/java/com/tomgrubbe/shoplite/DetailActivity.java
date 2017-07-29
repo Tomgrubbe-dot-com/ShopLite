@@ -170,8 +170,6 @@ public class DetailActivity extends AppCompatActivity {
             setResult(MainActivity.PRODUCT_UPDATE, getIntent().putExtra(MainActivity.PRODUCT_UPDATE_DATA, mProduct));
             DetailActivity.this.finish();
         }
-
-
     }
 
     private void deleteProduct()    {
