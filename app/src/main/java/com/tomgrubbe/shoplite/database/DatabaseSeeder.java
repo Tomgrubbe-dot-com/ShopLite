@@ -91,7 +91,7 @@ public class DatabaseSeeder {
 
         products.addProduct(new Product(null, "Chicken, Sliced", categories.findId("Deli")));
         products.addProduct(new Product(null, "Cole Slaw", categories.findId("Deli")));
-        products.addProduct(new Product(null, "Ham,Sliced", categories.findId("Deli")));
+        products.addProduct(new Product(null, "Ham, Sliced", categories.findId("Deli")));
         products.addProduct(new Product(null, "Lunch Meat", categories.findId("Deli")));
         products.addProduct(new Product(null, "Potato Salad", categories.findId("Deli")));
         products.addProduct(new Product(null, "Sausage", categories.findId("Deli")));
