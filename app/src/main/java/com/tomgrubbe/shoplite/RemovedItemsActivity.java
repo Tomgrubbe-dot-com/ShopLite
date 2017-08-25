@@ -1,8 +1,10 @@
 package com.tomgrubbe.shoplite;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -107,14 +109,36 @@ public class RemovedItemsActivity extends AppCompatActivity implements RemovedIt
         buttonClearAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removedItemsTable.deleteAll();
-                mItems.clear();
-                mAdapter.notifyDataSetChanged();
-                finish();
+                if (mItems.size() > 0) {
+                    clearAll();
+                }
             }
         });
 
         initSwipe();
+    }
+
+    private void clearAll() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
+
+        builder.setTitle("Clear Recent")
+                .setMessage("Are you sure you want to clear recent items?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        removedItemsTable.deleteAll();
+                        mItems.clear();
+                        mAdapter.notifyDataSetChanged();
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogSlideUp;
+        dialog.show();
     }
 
     private int checkedItemCount()  {

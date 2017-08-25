@@ -3,6 +3,7 @@ package com.tomgrubbe.shoplite.utils;
 
 import android.app.Activity;
 
+// Used to get easy access to the MainActivity
 public class Common {
     public static Common mInstance;
 
