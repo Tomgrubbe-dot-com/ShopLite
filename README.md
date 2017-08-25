@@ -1,13 +1,16 @@
 # ShopLite
 
-A Simple Android Shopping App
+Shoplite is a fast, lightweight, free shopping list manager with NO ADS.
 
-Features:
+It's an easy to use app that does one thing well, and doesn't suffer from feature bloat or nag screens.
+
+List of Features:
 
 * Supports Android versions Jellybean (4.1.x, sdk 16) and later
 * Predefined product and category tables
 * Add your own products and categories
 * SQlite database driven
+* Needs no special permissions or access
 * Voice support
 * Select items from history list or master product list
 * Select from reviously used items sorted by date
@@ -16,6 +19,7 @@ Features:
 * Ability to check/uncheck individual or all items
 * Can sort alphabetically or by order added
 * Custom user settings
+* NO ADS
 
 
 TODO:
